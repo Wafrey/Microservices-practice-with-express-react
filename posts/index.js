@@ -1,21 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { randomBytes } = require("crypto");
+const cors = require("cors");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 // This will simulte posts table in simulated DB
 const posts = {};
 
-app.get("posts", (req, res) => {
+app.get("/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("posts", (req, res) => {
+app.post("/posts", (req, res) => {
   // generate random id to handle creation of post
   const id = randomBytes(4).toString("hex");
-
   const { title } = req.body;
 
   posts[id] = {
@@ -23,7 +24,7 @@ app.post("posts", (req, res) => {
     title,
   };
 
-  res.status(201).send(post[id]);
+  res.status(201).send(posts[id]);
 });
 
 app.listen(4000, () => {
